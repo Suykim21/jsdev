@@ -84,7 +84,6 @@ function deletePost(e) {
 
 // Enable Edit State
 function enableEdit(e) {
-  console.log(e.target);
 
   if (e.target.parentElement.classList.contains('edit')) {
     const id = e.target.parentElement.dataset.id;
