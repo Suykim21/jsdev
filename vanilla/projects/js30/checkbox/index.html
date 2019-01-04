@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Hold Shift to Check Multiple Checkboxes</title>
+</head>
+<body>
+  <style>
+
+    html {
+      font-family: sans-serif;
+      background: #ffc600;
+    }
+
+    .inbox {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      /* box-shadow(horizontal, vertical, blur, color) */
+      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+    }
+
+    .item {
+      display: flex;
+      /* Vertical alignment */
+      align-items: center;
+      border-bottom: 1px solid #F1F1F1;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+    }
+
+    /* "+" sign selector is used to select the elements that are placed immediately after the specfied element but not inside the particular elements*/
+    input:checked + p {
+      background: #F9F9F9;
+      text-decoration: line-through;
+    }
+    
+    /* Styling Checkbox */
+    input[type="checkbox"] {
+      margin: 20px;
+    }
+
+    p {
+      margin: 0;
+      padding: 20px;
+      /* transitions P background when checked */
+      transition: background 0.2s;
+      /* covers all space (grey color) - flex grow */
+      flex: 1;
+      font-family: 'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border-left: 1px solid #D1E2FF;
+    }
+  </style> 
+
+  <div class="inbox">
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+  </div>
+
+  <script>
+    // Selecting all checkboxes
+    const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+    let lastChecked;
+
+    checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));
+
+    function handleCheck(e) {
+      // Check if they had the shift key down
+      let inBetween = false;
+      
+      if (e.shiftKey && this.checked) {
+        // Loop over every single checkbox
+        checkboxes.forEach(checkbox => {
+          
+          // Identifying starting and ending position to check
+          if (checkbox === this || checkbox === lastChecked) {
+            // Using !inBetween to go both ways true/false interchangeably
+            inBetween = !inBetween;
+          }
+
+          if (inBetween) {
+            checkbox.checked = true;
+          } 
+        });
+      } 
+
+      lastChecked = this; // Retrieving last checked checkbox (without shift key)
+    }
+  </script>
+</body>
+</html>
