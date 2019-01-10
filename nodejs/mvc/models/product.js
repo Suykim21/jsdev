@@ -6,6 +6,8 @@ const p = path.join(
     'products.json'
 );
 
+const Cart = require('./cart');
+
 const getProductsFromFile = cb => {
     fs.readFile(p, (err, fileContent) => {
         if (err) { // if there is no data in products.json - return empty arr
@@ -39,6 +41,22 @@ module.exports = class Product {
                 products.push(this); // appending new product to products
                 fs.writeFile(p, JSON.stringify(products), err => console.log(err)); // writing new product in json format to products.json
             }
+        });
+    }
+
+    static deleteById(id) {
+        getProductsFromFile(products => {
+            const product = products.find(prod => prod.id === id);
+            // Filter - Creates new array with all elements that pass the test
+            const updatedProducts = products.filter(prod => prod.id !== id);
+            console.log('updatedProducts', updatedProducts);
+            fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+                if (!err) { // If no error, remove from cart
+                    Cart.deleteProduct(id, product.price);
+                } else {
+                    console.log('error at deletebyid', err)
+                }
+            });
         });
     }
 
