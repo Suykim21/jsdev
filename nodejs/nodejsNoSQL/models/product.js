@@ -19,6 +19,19 @@ class Product {
         console.log(err);
       });
   }
+
+  static fetchAll() {
+    const db = getDb(); // Returns connected database mongodb
+    // toArray turns all data into js array
+    return db.collection('products').find().toArray()
+      .then(products => {
+        console.log(products);
+        return products;
+      })
+      .catch(err => {
+        console.log(err);
+      }); 
+  }
 }
 
 module.exports = Product;
