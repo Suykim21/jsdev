@@ -104,17 +104,110 @@
     //     const [weatherInfo, tweetsInfo] = responses;
     //   })
 
-    const postsPromise = fetch('https://jsonplaceholder.typicode.com/posts');
-    const commentsPromise = fetch('https://jsonplaceholder.typicode.com/comments');
+    // const postsPromise = fetch('https://jsonplaceholder.typicode.com/posts');
+    // const commentsPromise = fetch('https://jsonplaceholder.typicode.com/comments');
 
-    Promise.all([postsPromise, commentsPromise])
-      .then(responses => {
-        // map - creates new array
-        return Promise.all(responses.map(res => res.json()))
-      })
-      .then(responses => {
-        console.log(responses);
+    // Promise.all([postsPromise, commentsPromise])
+    //   .then(responses => {
+    //     // map - creates new array
+    //     return Promise.all(responses.map(res => res.json()))
+    //   })
+    //   .then(responses => {
+    //     console.log(responses);
+    //   });
+
+    function breathe(amount) {
+      return new Promise((resolve, reject) => {
+        if(amount < 500) {
+          reject('That is too small of a value');
+        }
+        setTimeout(() => resolve(`Done for ${amount} ms`), amount);
       });
+    }
+
+    // High order function
+    // function catchErrors(fn) {
+    //   return function(...args) { // wrappedFunction
+    //     return fn(...args).catch(err => {
+    //       console.error('oh no');
+    //       console.error(err);
+    //     });
+    //   }
+    // }
+
+    // async function go(name, last) {
+    //     console.log(`starting for ${name} ${last}`);
+    //     const res = await breathe(1000);
+    //     console.log(res);
+    //     const res2 = await breathe(400);
+    //     console.log(res2);
+    //     const res3 = await breathe(800);
+    //     console.log(res3);
+    //     const res4 = await breathe(1100);
+    //     console.log(res4);
+    //     console.log('end');
+    //     console.error("oh no");
+    //     console.log(err);
+    // }
+
+
+    // async function go() {
+    //   const p1 = fetch('https://api.github.com/users/wesbos');
+    //   const p2 = fetch('https://api.github.com/users/stolinski');
+
+    //   // wait for both of them to come back
+    //   const res = await Promise.all([p1, p2]);
+    //   //console.log(res);
+    //   const dataPromises = res.map(r => r.json()); // makes new array Promises
+    //   //console.log(dataPromises);
+    //   const [wes, scott] = await Promise.all(dataPromises); //.then all promises
+    //   console.log(wes, scott); // data
+    // }
+    // go();
+
+    async function getData(names) {
+      const promises = names.map(name => fetch(`https://api.github.com/users/${name}`).then(r => r.json()));
+      const people = await Promise.all(promises);
+      console.log(people);
+    }
+
+    // High order function
+    function catchErrors(fn) {
+      return function(...args) { // wrappedFunction
+        return fn(...args).catch(err => {
+          console.error('oh no');
+          console.error(err);
+        });
+      }
+    }
+
+    //getData(['wesbos', 'stolinski', 'darcyclarke']);
+
+    const wrappedFunction = catchErrors(getData);
+
+    wrappedFunction(['wesbos', 'stolinski', 'darcyclarke']);
+
+    // navigator.geolocation.getCurrentPosition(function(pos) {
+    //   console.log('it worked!');
+    //   console.log(pos);
+    // }, function(err) {
+    //   console.log('it failed!');
+    //   console.log(err);
+    // });
+    
+    function getCurrentPosition(...args) {
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(...args, resolve, reject);
+      });
+    }
+
+    async function go() {
+      const pos = await getCurrentPosition();
+      console.log(pos);
+    }
+
+    go();
+
   </script>
 </body>
 </html>
