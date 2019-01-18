@@ -48,21 +48,73 @@ class User {
 
   getCart() {
     const db = getDb();
+    // Creates array with product ids
     const productIds = this.cart.items.map(i => {
       console.log('map', i.productId);
       return i.productId;
     });
     return db.collection('products')
+    // Looks at products collection where _id field is equal to productIds
       .find({_id: {$in: productIds}})
-      .toArray()
-      .then(products => {
-        return products.map(p => {
-          return {...p, quantity: this.cart.items.find(i => {
+      .toArray() // Returns an array that contains all the documents
+      .then(products => { 
+        return products.map(p => { // Creates new array 
+          // Returns array that productId matching product_id from database
+          // along iwth its quantity
+          return {...p, quantity: this.cart.items.find(i => { 
               return i.productId.toString() === p._id.toString();
           }).quantity
         }
       });
     });
+  }
+
+  deleteItemFromCart(productId) {
+    const updatedCartItems = this.cart.items.filter(item => {
+      return item.productId.toString() !== productId.toString(); // Return items that won't be deleted
+    });
+
+    const db = getDb();
+    return db
+      .collection('users')
+      .updateOne(
+        {_id: new ObjectId(this._id)},
+        { $set: { cart: {items: updatedCartItems }}}
+      );
+  }
+
+  // Sending Order
+  addOrder() {
+    const db = getDb();
+    return this.getCart()
+      .then(products => { // Get Array of products (cart)
+        const order = { // Create order with cart data
+          items: products,
+          user: {
+            _id: new ObjectId(this._id),
+            name: this.name,
+          }
+        };
+        return db.collection('orders').insertOne(order);
+      })
+      .then(result => {
+          this.cart = {items: []}; // Clear cart when new order has been added
+          return db
+            .collection('users')
+            .updateOne( // Clear items in cart object as well.
+              {_id: new ObjectId(this._id)},
+              { $set: { cart: {items: [] }}}
+          )
+      });
+  }
+
+  getOrders() {
+    const db = getDb();
+    return db.collection('orders')
+      // Look for user id that matches db _id
+      .find({'user._id': new ObjectId(this._id)})
+      // Return array of orders
+      .toArray();
   }
 
   static findById(userId) {
