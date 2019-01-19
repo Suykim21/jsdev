@@ -1,21 +1,39 @@
 const Product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  // In mongoose, find is another built-in method that finds all product
+  // find() returns object with array;
+  Product.find()
     .then(products => {
+      console.log(products);
       res.render('shop/product-list', {
         prods: products,
         pageTitle: 'All Products',
         path: '/products'
-      });
+      })
     })
     .catch(err => {
       console.log(err);
     });
+
+  // Non-mongoose way
+  // Product.fetchAll()
+  //   .then(products => {
+  //     res.render('shop/product-list', {
+  //       prods: products,
+  //       pageTitle: 'All Products',
+  //       path: '/products'
+  //     });
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
+
+  // MONGODB version
   // Product.findAll({ where: { id: prodId } })
   //   .then(products => {
   //     res.render('shop/product-detail', {
@@ -25,6 +43,8 @@ exports.getProduct = (req, res, next) => {
   //     });
   //   })
   //   .catch(err => console.log(err));
+
+  // Mongoose's built in method - findById(string)
   Product.findById(prodId)
     .then(product => {
       res.render('shop/product-detail', {
@@ -37,7 +57,8 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
+  // Mongoose built-in find method
+  Product.find()
     .then(products => {
       res.render('shop/index', {
         prods: products,
@@ -48,6 +69,17 @@ exports.getIndex = (req, res, next) => {
     .catch(err => {
       console.log(err);
     });
+  // Product.fetchAll()
+  //   .then(products => {
+  //     res.render('shop/index', {
+  //       prods: products,
+  //       pageTitle: 'Shop',
+  //       path: '/'
+  //     });
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
 };
 
 exports.getCart = (req, res, next) => {
