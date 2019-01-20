@@ -17,7 +17,8 @@ exports.postAddProduct = (req, res, next) => {
     title: title, 
     price: price, 
     description: description, 
-    imageUrl: imageUrl
+    imageUrl: imageUrl,
+    userId: req.user  // implicit way of saying req.user._id - mongoose will automatically pick id; referenced in app.js line 24
   });
   // const product = new Product( // Mongodb without mongoose (es6 class)
   //   title,
@@ -104,7 +105,12 @@ exports.postEditProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   // Built-in mongoose method - find() - fetches all data
   Product.find()
+    // Which field to be selected in database
+    // .select('title price -_id')  // Get title and price but exclude _id
+    //  //populate certain fields with all the details not just id
+    // .populate('userId', 'name') // only populate name in userId
     .then(products => {
+      console.log(products);
       res.render('admin/products', {
         prods: products,
         pageTitle: 'Admin Products',
