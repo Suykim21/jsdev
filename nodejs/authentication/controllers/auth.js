@@ -4,29 +4,46 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
 exports.getLogin = (req, res, next) => {
+  // req.flash has empty array to begin with
+  // the code below is to prevent flash message to not persist in views
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    isAuthenticated: false
+    errorMessage: message
   });
 };
 
 exports.getSignup = (req, res, next) => {
+  // req.flash has empty array to begin with
+  // the code below is to prevent flash message to not persist in views
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Signup',
-    isAuthenticated: false
+    errorMessage: message
   });
 };
 
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log('I AM AT POST LOGIN');
   User.findOne({email: email})
     .then(user => {
       // if user is not found through email
       if (!user) {
+        // req.flash - key / value
+        req.flash('error', 'Invalid email or password.'); // connect-flash package;
         return res.redirect('/login');
       }
       // Unhasing password and comparing to user's password
@@ -36,14 +53,17 @@ exports.postLogin = (req, res, next) => {
           // if password are equal to hashed password
           if (doMatch) {
             // Storing user data to session
+            console.log('im at postlogin 1st')
             req.session.isLoggedIn = true;
             req.session.user = user;
+            console.log('im at postlogin 2');
             // return to avoid code execution on line 47 res.redirect('/login')
             return req.session.save(err => {
               console.log(err);
               res.redirect('/'); // redirecting to homepage
             });
           }
+          req.flash('error', 'Invalid email or password.'); // connect-flash 
           res.redirect('/login');
         })
         .catch(err => {
@@ -63,6 +83,7 @@ exports.postSignup = (req, res, next) => {
   User.findOne({email: email})
     .then(userDoc => {
       if(userDoc) { // if user exists redirec them for now.
+        req.flash('error', 'Email exists already. Please choose different email'); // connect-flash 
         return res.redirect('/signup');
       }
       // first value is string (password to be hashed) - how many rounds to salt

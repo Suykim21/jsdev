@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf'); // csrf protection
+const flash = require('connect-flash');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
@@ -39,6 +40,8 @@ app.use(
 );
 
 app.use(csrfProtection); // protects all non-get requests
+// Flash must be put below session to save its info
+app.use(flash()); // flash messages
 
 // The code is used when logging in or logging out
 // event listener for session
@@ -55,7 +58,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.isAuthenticated = req.session.isLoggedIn; // is-auth.js
   res.locals.csrfToken = req.csrfToken();
   next();
 });
