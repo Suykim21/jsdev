@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-const csrf = require('csurf'); // csrf protection
+const csrf = require('csurf');
 const flash = require('connect-flash');
 
 const errorController = require('./controllers/error');
@@ -19,6 +19,15 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 });
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+
 const csrfProtection = csrf();
 
 app.set('view engine', 'ejs');
@@ -28,8 +37,14 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
@@ -39,20 +54,16 @@ app.use(
     store: store
   })
 );
+app.use(csrfProtection);
+app.use(flash());
 
-app.use(csrfProtection); // protects all non-get requests
-// Flash must be put below session to save its info
-app.use(flash()); // flash messages
-
-// The code is used when logging in or logging out
-// event listener for session
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
   }
   User.findById(req.session.user._id)
     .then(user => {
-      console.log('session?')
+      console.log('session?');
       req.user = user;
       next();
     })
@@ -60,7 +71,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn; // is-auth.js
+  res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
   next();
 });
