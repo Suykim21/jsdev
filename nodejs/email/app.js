@@ -22,7 +22,8 @@ const store = new MongoDBStore({
 
 app.use((req, res, next) => {
   if (req.path === '/favicon.ico') {
-    console.log('Favicon blocked...')
+    console.log("=====blocked 1");
+    console.log('Favicon blocked...');
     return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
   }
   next();
@@ -30,22 +31,85 @@ app.use((req, res, next) => {
 
 const csrfProtection = csrf();
 
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 2");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
 app.set('view engine', 'ejs');
-app.set('views', 'views');
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-const authRoutes = require('./routes/auth');
 
 app.use((req, res, next) => {
   if (req.path === '/favicon.ico') {
+    console.log("=====blocked 3");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+app.set('views', 'views');
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 4");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+const adminRoutes = require('./routes/admin');
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 5");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+const shopRoutes = require('./routes/shop');
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 6");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+const authRoutes = require('./routes/auth');
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 7");
     console.log('Favicon blocked...')
     return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
   }
   next();
 });
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 8");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 9");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+
 app.use(
   session({
     secret: 'my secret',
@@ -54,8 +118,37 @@ app.use(
     store: store
   })
 );
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 10");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+
 app.use(csrfProtection);
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 11");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+
 app.use(flash());
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 12");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -71,17 +164,85 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 13");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+
+app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
   next();
 });
 
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 14");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+
 app.use('/admin', adminRoutes);
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 15");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
 app.use(shopRoutes);
+
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 16");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
 app.use(authRoutes);
 
-app.use(errorController.get404);
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 17");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
 
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 18");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 19");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
+app.use(errorController.get404);
+app.use((req, res, next) => {
+  if (req.path === '/favicon.ico') {
+    console.log("=====blocked 20");
+    console.log('Favicon blocked...')
+    return res.send('Blocking favicon to not create more sessions... Implement code for handling favicons.')
+  }
+  next();
+});
 mongoose
   .connect(MONGODB_URI)
   .then(result => {
